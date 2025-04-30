@@ -4,15 +4,14 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HeoMusic - 用音乐感染人心</title>
+  <title>Leko Music</title>
   <link rel="stylesheet" type="text/css" href="./css/APlayer.css">
   <link rel="stylesheet" type="text/css" href="./css/main.css">
   <link rel="icon" type="image/x-icon" href="./img/icon.webp">
   <link rel="apple-touch-icon" href="./img/icon-r.webp">
-  <meta name="apple-mobile-web-app-title" content="音乐">
+  <meta name="apple-mobile-web-app-title" content="音樂">
   <link rel="bookmark" href="./img/icon.webp">
   <link rel="apple-touch-icon-precomposed" sizes="180x180" href="./img/icon-r.webp">
-  <meta name="description" content="一个简单好用的音乐播放器。">
   <link rel="manifest" href="/manifest.json"> 
   <meta name="theme-color" content="#000000">
 </head>
@@ -21,6 +20,25 @@
 </div>
 <script src="./config.js"></script>
 <script src="./js/APlayer.min.js"></script>
-<script async data-pjax src="./js/main.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      console.log('收到 Service Worker 的訊息：', event.data);
+      if (event.data?.type === "SW_INITED") {
+        const script = document.createElement('script');
+        script.src = './js/main.js';
+        script.async = true;
+        script.setAttribute('data-pjax', '');
+        document.body.appendChild(script);
+      }
+    });
+
+    navigator.serviceWorker.ready.then((registration) => {
+      registration.active.postMessage("INIT");
+    });
+
+    navigator.serviceWorker.register('/sw.js', { type: 'module' })
+  }
+</script>
 </body>
 </html>
