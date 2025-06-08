@@ -20,6 +20,7 @@
 </div>
 <script src="./config.js"></script>
 <script src="./js/APlayer.min.js"></script>
+<script src="./js/lrc-parse.js"></script>
 <script>
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.addEventListener('message', (event) => {
@@ -30,6 +31,15 @@
         script.async = true;
         script.setAttribute('data-pjax', '');
         document.body.appendChild(script);
+
+        (function waitForAp() {
+          if (document.querySelector('.aplayer-lrc-contents') && window.ap) {
+            console.log("Initializing Lyric Processor...");
+            window.initLyricProcessor();
+          } else {
+            requestAnimationFrame(waitForAp);
+          }
+        })();
       }
     });
 
